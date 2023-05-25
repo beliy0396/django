@@ -1,0 +1,28 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+    ChickenBurger Shop
+{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center; color: white; font-size: 40px;">НОВИНКИ</h1>
+    <div  style="display: flex; justify-content: center; padding-bottom: 50px;">
+        {% for product in products %}
+            <div style="color: white; text-align: center;">
+                <h1><a style="text-decoration: underline; color: rgb(119, 89, 55);" href="{% url 'shopapp:product_details' pk=product.pk %}">{{ product.name }}</a></h1>
+                <div>
+                    {% if product.preview %}
+                        <img style="width: 400px; height: 250px;" src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+                    {% endif %}
+                </div>
+                <p style="text-shadow: 1px 1px 2px black;">Описание: {{ product.description }}</p>
+                <p style="text-shadow: 1px 1px 2px black;">Цена: {{ product.price }} руб.</p>
+                <p style="text-shadow: 1px 1px 2px black;">Скидка: {% firstof product.discount '0' %} руб.</p>
+                <p style="text-shadow: 1px 1px 2px black;">Просмотры: {{ product.views_count }} раз(-a)</p>
+            </div>
+        {% endfor %}
+    </div>
+    <p style="text-align: center; color: white; font-size: 30px;">{% if num_visits == 0 %} Вы впервые на нашем сайте!{% else %} Вы посетили наш сайт: {{ num_visits }} раз(-а){% endif %}</p>
+
+
+{% endblock %}

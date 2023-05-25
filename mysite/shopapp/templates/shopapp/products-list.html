@@ -1,0 +1,43 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+    ЧикенБургер'ы
+{% endblock %}
+
+{% block body %}
+    <div style="text-align: right; padding-right: 120px; padding-top: 20px;">
+        <form action="{% url 'shopapp:search' %}" method="GET">
+            <input type="search" type="text" name="q" placeholder="Поиск">
+            <button style="text-shadow: 1px 1px 2px black; color: white; background-color: rgb(119, 89, 55);" type="submit">Поиск</button>
+            <br>
+            <button style="margin-top: 5px; width: 234px; text-shadow: 1px 1px 2px black; color: white; background-color: rgb(119, 89, 55);" type="submit">Сбросить параметры поиска</button>
+        </form>
+    </div>
+
+    <h1 style="text-align: center; color: white; font-size: 40px;">Каталог ЧикенБургеров</h1>
+     {% if products %}
+        <div  style="display: flex; justify-content: center;">
+            {% for product in products %}
+                <div style="color: white; text-align: center;">
+                    <h1><a style="text-decoration: underline; color: rgb(119, 89, 55);" href="{% url 'shopapp:product_details' pk=product.pk %}">{{ product.name }}</a></h1>
+                    <div>
+                        {% if product.preview %}
+                          <img style="width: 400px; height: 250px" src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+                        {% endif %}
+                    </div>
+                    <p style="text-shadow: 1px 1px 2px black;">Описание: {{ product.description }}</p>
+                    <p style="text-shadow: 1px 1px 2px black;">Цена: {{ product.price }} руб.</p>
+                    <p style="text-shadow: 1px 1px 2px black;">Скидка: {% firstof product.discount '0' %} руб.</p>
+                    <p style="text-shadow: 1px 1px 2px black;">Просмотры: {{ product.views_count }} раз(-a)</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3>Тут пока ничего нет :(</h3>
+    {% endif %}
+    {% if perms.shopapp.add_product %}
+        <div>
+            <a style="padding-left: 120px; text-decoration: underline; color: rgb(119, 89, 55); font-size: 20px;" href="{% url 'shopapp:product-create'%}">Добавить новые Чикен'ы</a>
+        </div>
+    {% endif %}
+{% endblock %}

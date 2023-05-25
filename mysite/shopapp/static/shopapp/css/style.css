@@ -1,0 +1,57 @@
+body{
+    background-color: rgb(194, 156, 112);
+}
+.contacts_footer{
+    padding-left: 50px;
+    padding-top: 1px;
+    font-size: 20px;
+    color: white;
+    background-color: rgb(119, 89, 55);
+    height: 250px;
+}
+.header{
+    background-color: rgb(119, 89, 55);
+    height: 150px;
+}
+
+.logotype{
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    font-size: 50px;
+    color: white;
+}
+
+.nav{
+    padding-top: 60px;
+    display: flex;
+    justify-content: right;
+    font-size: 24px;
+    gap: 25px;
+    padding-right: 50px;
+}
+
+.home{
+    text-decoration: none;
+    color: white;
+}
+
+.catalog{
+    text-decoration: none;
+    color: white;
+}
+
+.cart{
+    text-decoration: none;
+    color: white;
+}
+
+.profile{
+    text-decoration: none;
+    color: white;
+}
+
+.contacts{
+    text-decoration: none;
+    color: white;
+}

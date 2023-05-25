@@ -1,0 +1,52 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+  Product {{ product.pk }}
+{% endblock %}
+
+{% block body %}
+    <h1 style="color: rgb(119, 89, 55); text-align: center;"><strong>{{ product.name }}</strong></h1>
+    <div style="color: white; text-align: center;">
+        <div>
+            {% if product.preview %}
+                <img style="width: 400px; height: 250px" src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+            {% endif %}
+        </div>
+        <div style="text-shadow: 1px 1px 2px black;">
+            Описание:
+            <en>{{ product.description }}</en>
+        </div>
+        <div style="text-shadow: 1px 1px 2px black;">
+            Цена:
+            <en>{{ product.price }} руб.</en>
+        </div>
+        <div style="text-shadow: 1px 1px 2px black;">
+            Скидка:
+            <en>{{ product.discount }} руб.</en>
+        </div>
+        <div style="text-shadow: 1px 1px 2px black;">
+            Кол-во просмотров:
+            <en>{{ product.views_count }} раз(-a)</en>
+        </div>
+    </div>
+
+    {% if perms.shopapp.change_product %}
+        <div>
+            <a style="padding-left: 150px; text-decoration: underline; color: rgb(119, 89, 55); font-size: 20px;" href="{% url 'shopapp:product_update' pk=product.pk %}">Редактировать</a>
+            <br>
+        </div>
+    {% endif %}
+
+    {% if perms.shopapp.delete_product %}
+        <div>
+            <a style="padding-left: 150px; text-decoration: underline; color: rgb(119, 89, 55); font-size: 20px;" href="{% url 'shopapp:product_delete' pk=product.pk %}">Удалить</a>
+            <br>
+        </div>
+    {% endif %}
+
+
+    <div>
+        <a style="padding-left: 150px; text-decoration: underline; color: rgb(119, 89, 55); font-size: 20px;" href="{% url 'shopapp:products-list' %}">Назад к каталогу Чикен'ов</a>
+    </div>
+
+{% endblock %}
