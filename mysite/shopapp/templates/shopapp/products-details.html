@@ -30,6 +30,11 @@
         </div>
     </div>
 
+    <div>
+        <a style="padding-left: 150px; text-decoration: underline; color: rgb(119, 89, 55); font-size: 20px;" href="{% url 'shopapp:add_to_cart' pk=product.pk %}">Добавить в корзину</a>
+        <br>
+    </div>
+
     {% if perms.shopapp.change_product %}
         <div>
             <a style="padding-left: 150px; text-decoration: underline; color: rgb(119, 89, 55); font-size: 20px;" href="{% url 'shopapp:product_update' pk=product.pk %}">Редактировать</a>

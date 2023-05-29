@@ -11,7 +11,9 @@ from .views import (
     AboutMeView,
     AboutMeUpdateView,
     Search,
-
+    view_cart,
+    add_to_cart,
+    remove_from_cart
 )
 from .views import shop_index
 app_name = "shopapp"
@@ -29,4 +31,8 @@ urlpatterns = [
     path("products/delete/<int:pk>/", ProductDeleteView.as_view(), name="product_delete"),
     path("products/create", ProductCreateView.as_view(), name="product-create"),
     path("search", Search.as_view(), name="search"),
+    path('cart/', view_cart, name='view_cart'),
+    path('cart/add/<int:pk>/', add_to_cart, name='add_to_cart'),
+    path('cart/remove/<int:pk>/', remove_from_cart, name='remove_from_cart'),
 ]
+

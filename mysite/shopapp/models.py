@@ -27,3 +27,10 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=100, null=False, blank=True)
     email = models.CharField(max_length=100, null=False, blank=True)
 
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    def total_price(self):
+        return self.product.price * self.quantity

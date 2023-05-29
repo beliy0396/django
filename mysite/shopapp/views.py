@@ -1,16 +1,17 @@
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpRequest
+
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render, reverse
-from django.views.generic import TemplateView, CreateView, DeleteView
+from django.shortcuts import render, reverse, get_object_or_404, redirect
+from django.views.generic import TemplateView, CreateView, DeleteView, View
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LogoutView
 from .models import Profile
 
 
-from .models import Product
+from .models import Product, Cart
 
 def shop_index(request: HttpRequest) -> HttpResponse:
     products = Product.objects.order_by('-id')[:3]
@@ -148,3 +149,25 @@ class Search(ListView):
         context = super().get_context_data(**kwargs)
         context['q'] = self.request.GET.get('q')
         return context
+
+def view_cart(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    context = {'cart_items': cart_items}
+    return render(request, 'shopapp/cart.html', context)
+
+def add_to_cart(request, pk):
+    product = Product.objects.get(pk=pk)
+    cart_item = Cart.objects.filter(product=product, user=request.user).first()
+    if cart_item:
+        cart_item.quantity += 1
+        cart_item.save()
+    else:
+        cart_item = Cart(user=request.user, product=product)
+        cart_item.save()
+    return redirect('shopapp:view_cart')
+
+def remove_from_cart(request, pk):
+    cart_item = Cart.objects.get(pk=pk, user=request.user)
+    cart_item.delete()
+    return redirect('shopapp:view_cart')
+
