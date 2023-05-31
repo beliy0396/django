@@ -11,8 +11,7 @@ from django.contrib.auth.views import LogoutView
 from .models import Profile
 
 
-from .models import Product, Cart
-
+from .models import Product, Cart, CartItem, Order, OrderItem
 def shop_index(request: HttpRequest) -> HttpResponse:
     products = Product.objects.order_by('-id')[:3]
     num_visits = request.session.get('num_visits', 0)
@@ -151,23 +150,42 @@ class Search(ListView):
         return context
 
 def view_cart(request):
-    cart_items = Cart.objects.filter(user=request.user)
-    context = {'cart_items': cart_items}
+    cart = Cart.objects.get(user=request.user)
+    cart_items = cart.cartitem_set.all()
+    total = 0
+    for item in cart_items:
+        total += item.product.price * item.quantity
+    context = {
+        'cart': cart,
+        'cart_items': cart_items,
+        'total': total
+    }
     return render(request, 'shopapp/cart.html', context)
 
 def add_to_cart(request, pk):
+    cart, created = Cart.objects.get_or_create(user=request.user)
     product = Product.objects.get(pk=pk)
-    cart_item = Cart.objects.filter(product=product, user=request.user).first()
-    if cart_item:
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
         cart_item.quantity += 1
-        cart_item.save()
-    else:
-        cart_item = Cart(user=request.user, product=product)
         cart_item.save()
     return redirect('shopapp:view_cart')
 
+
 def remove_from_cart(request, pk):
-    cart_item = Cart.objects.get(pk=pk, user=request.user)
+    cart_item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
     cart_item.delete()
     return redirect('shopapp:view_cart')
 
+def create_order(request):
+    cart = Cart.objects.get(user=request.user)
+    cart_items = cart.cartitem_set.all()
+    order = Order(user=request.user, total=0)
+    order.save()
+    for item in cart_items:
+        order_item = OrderItem(order=order, product=item.product, quantity=item.quantity)
+        order_item.save()
+        order.total += item.product.price * item.quantity
+    order.save()
+    cart_items.delete()
+    return redirect('shopapp:view_cart')

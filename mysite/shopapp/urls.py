@@ -13,7 +13,8 @@ from .views import (
     Search,
     view_cart,
     add_to_cart,
-    remove_from_cart
+    remove_from_cart,
+    create_order,
 )
 from .views import shop_index
 app_name = "shopapp"
@@ -34,5 +35,6 @@ urlpatterns = [
     path('cart/', view_cart, name='view_cart'),
     path('cart/add/<int:pk>/', add_to_cart, name='add_to_cart'),
     path('cart/remove/<int:pk>/', remove_from_cart, name='remove_from_cart'),
+    path('checkout/', create_order, name='create_order'),
 ]
 

@@ -23,7 +23,9 @@
                 <a class="profile" href="{% url 'shopapp:login'%}">Войти в профиль</a>
                 <a class="profile" href="{% url 'shopapp:register'%}">Зарегистрироваться</a>
             {% endif %}
-            <a class="cart" href="{% url 'shopapp:view_cart'%}">Корзина</a>
+            {% if user.is_authenticated %}
+                <a class="cart" href="{% url 'shopapp:view_cart'%}">Корзина</a>
+            {% endif %}
         </div>
     </div>
     {% endblock %}

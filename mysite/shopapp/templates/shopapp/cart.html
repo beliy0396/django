@@ -1,44 +1,45 @@
 {% extends 'shopapp/base.html' %}
 
 {% block title %}
-    ЧикенБургер'ы
+  Корзина товаров
 {% endblock %}
 
 {% block body %}
-    <h1 style="text-align: center; color: white; font-size: 40px;">Товары:</h1>
+    <h1 style="text-align: center; color: white; font-size: 40px;">Корзина</h1>
     {% if cart_items %}
-    <div style="padding-left: 700px;">
+    <div style="padding-left: 750px;">
         <table style="text-align: center; font-size: 20px;">
             <tr>
                 <th>Товар</th>
                 <th>Цена</th>
                 <th>Количество</th>
-                <th>Итоговая цена</th>
+                <th></th>
             </tr>
             {% for item in cart_items %}
-            <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.product.price }}руб.</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.total_price }}руб.</td>
-                <td>
-                    <form method="POST" action="{% url 'shopapp:remove_from_cart' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Удалить</button>
-                    </form>
-                </td>
-            </tr>
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                        <form action="{% url 'shopapp:remove_from_cart' item.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
             {% endfor %}
+            <tr>
+                <td colspan="3"><strong>Всего к оплате:</strong></td>
+                <td>{{ total }}руб.</td>
+                <td></td>
+            </tr>
         </table>
-        <br>
-        <form style="text-align: center;" method="POST" action="#">
+        <form style="text-align: center; padding-bottom: 50px;" action="{% url 'shopapp:create_order'%}" method="post">
             {% csrf_token %}
             <button type="submit">Оформить заказ</button>
         </form>
-        <br>
     </div>
     {% else %}
         <h3 style="text-align: center; font-size: 20px;">Тут пока ничего нет :(</h3>
     {% endif %}
-
 {% endblock %}
